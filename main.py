@@ -1,15 +1,21 @@
+#further inputs to implement:
+##test_range
+#add info buttons
+
+
+
 import streamlit as st
 from pwfunctions import find_consecutive_chars
 from pwfunctions import random_pw
 from pwfunctions import closest_distance
-#import editdistance
+
 import time
 import pandas as pd
 import random
 
 # ----- Start with app here -----#
 if __name__ == "__main__":
-    tab1, tab2 = st.tabs(["Main", "About Me"])
+    tab1, tab2 = st.tabs(["Main", "About"])
 
     with tab1:
 
@@ -30,7 +36,7 @@ if __name__ == "__main__":
         with c1:
             input_len_min = st.number_input("Min", min_value=4, max_value=15, value=7, step=1)
         with c2:
-            input_len_max = st.number_input("Max", min_value=input_len_min, max_value=15, value=8, step=1)
+            input_len_max = st.number_input("Max", min_value=4, max_value=15, value=8, step=1)
         
         st.write(" ")
         st.write("_Password complexity_")
@@ -49,9 +55,12 @@ if __name__ == "__main__":
         input_IL = st.checkbox("Exclude I/l/1", value = True)
         input_O0 = st.checkbox("Exclude O/0", value = True)
         #input_lev = st.checkbox("Check for Levenshtein distance", value = True)
+        input_editdis = st.number_input(label = "Edit distance/Levenshtein distance", value=1)
 
         if st.sidebar.button("create passwords"):
             
+            start = time.time()
+
             random.seed(input_seed)
             
             ls = []
@@ -95,14 +104,14 @@ if __name__ == "__main__":
                             closest_match = ls[ls_dist.index(min_dis)]
                             
                             #only append list if similarity score is greater 1, that is, at least two change to the password must be made 
-                            edistance = 1
+                            edistance = input_editdis
                             if min_dis > edistance:   
                                 ls.append(pw)
                                 i +=1      
                             else:
                                 #this part is for troubleshooting or identifying if something goes wrong. 
                                 print("length password list:", len(ls))
-                                print("Target string:", pw)
+                                print("Password:", pw)
                                 print("Closest match:", closest_match)
                                 print("edit distance:", min_dis)
                         else:
@@ -119,10 +128,30 @@ if __name__ == "__main__":
             st.write(df.head())
             #st.write(tabulate(df[0:6], headers='keys', tablefmt='psql', showindex=False))
             
+            end = time.time()
+            t = end - start
+            t_form = "{:.2f}"
+            t = t_form.format(t)
+
+            df_settings = pd.DataFrame({'setting': ['seed', 'N passwords', 'min length', 'max length', "complexity uppercase", "complexity lowercase", "complexity numbers", "complexity special", "exclude Il1", "exclude O0", "editdistance", "time in seconds"],
+                                        'value': [input_seed, input_num_pw, input_len_min, input_len_max, input_uppercase, input_lowercase, input_numbers, input_special, input_IL, input_O0, input_editdis, t]} 
+                           )
+
             st.sidebar.download_button(
                 label="Download data as CSV",
                 data=df.to_csv(index = False).encode('utf-8'),
                 file_name='passwords.csv',
                 mime='text/csv',)
+            
+            st.sidebar.download_button(
+                label="Download app settings",
+                data=df_settings.to_csv(index = False, sep=';').encode('utf-8'),
+                file_name='app_settings.csv',
+                mime='text/csv',)
 
+    with tab2:
+        with open("README.md", "r") as file:
+            content = file.read()
+
+        st.markdown(content)
 

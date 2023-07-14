@@ -30,8 +30,8 @@ def find_consecutive_chars(pw):
     return prop_consecutive
 
 #create a random password
-def random_pw(len_min = 1,
-             len_max = 1, 
+def random_pw(len_min = 4,
+             len_max = 4, 
              uppercase = True,
              lowercase = False,
              numbers = False,
@@ -42,32 +42,57 @@ def random_pw(len_min = 1,
     
     #password complexity:
     complexity = ''
-    
+    lowercase_ls = ''
+    uppercase_ls = ''
+    numbers_ls = ''
+    special_ls = ''
+
     if uppercase == True: 
+        uppercase_ls = string.ascii_uppercase 
         complexity += string.ascii_uppercase
     if lowercase == True:
+        lowercase_ls = string.ascii_lowercase 
         complexity += string.ascii_lowercase
     if numbers == True:
+        numbers_ls = string.digits
         complexity += string.digits
-    if special == True: 
-        complexity += '!"§$%&/()=?'
+    if special == True:
+        special_ls = '!"§$%&/()?' #no equal sign will be provided or else Excel will do weird things to your password list. 
+        complexity += '!"§$%&/()?'
     if cut_I_and_l == True:
         complexity = complexity.replace("I", "")
         complexity = complexity.replace("l", "")
         complexity = complexity.replace("1", "")
+        uppercase_ls = uppercase_ls.replace("I", "")
+        lowercase_ls = lowercase_ls.replace("l", "")
+        numbers_ls = numbers_ls.replace("1", "")
     if cut_O_and_0 == True:
         complexity = complexity.replace("O", "")
         complexity = complexity.replace("0", "")
+        uppercase_ls = uppercase_ls.replace("O", "")
+        numbers_ls = numbers_ls.replace("0", "")
     
     
     #password length
     length = random.randint(len_min, len_max)
 
-    pw = ''
+    a = random.choice(uppercase_ls) if uppercase == True else random.choice(complexity)
+    b = random.choice(lowercase_ls) if lowercase == True else random.choice(complexity)
+    c = random.choice(numbers_ls) if numbers == True else random.choice(complexity)
+    d = random.choice(special_ls) if special == True else random.choice(complexity)
+
+    pw = a+b+c+d
     
     while length > len(pw):
-        pw += complexity[random.randint(0, len(complexity)-1)]
+        pw += random.choice(complexity)
     
+    #print(pw)
+
+    #shuffle the letters in the password
+    pw = ''.join(random.sample(pw, len(pw)))
+    #print(pw)
+
+
     return pw
 
 #find the closest distance between the created password and a list password from a list of passwords 
