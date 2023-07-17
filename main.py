@@ -57,8 +57,16 @@ if __name__ == "__main__":
         #input_lev = st.checkbox("Check for Levenshtein distance", value = True)
         input_editdis = st.number_input(label = "Edit distance/Levenshtein distance", value=1)
 
+        ## I need a session so that download buttons do not reset themselves
+        # Check if the 'show_buttons' key exists in session_state
+        if 'show_buttons' not in st.session_state:
+            st.session_state.show_buttons = False
+
+        # Button to show or hide the download buttons
         if st.sidebar.button("create passwords"):
-            
+            st.session_state.show_buttons = True
+
+        if st.session_state.show_buttons:
             start = time.time()
 
             random.seed(input_seed)
@@ -87,7 +95,7 @@ if __name__ == "__main__":
                             # to reduce the number of similarity comparisons, you can set a test range. The benefit is that a newly created password does not have to be checked against all other passwords in the list but only for the passwords within the test range
                             # test_range default is 1000, i.e., if available, 1000 passwords before and 1000 passwords after the newly created password will be tested on similarity. 
                             # the test range becomes important when optimizing very large samples of passwords, e.g., 100,000 
-                            test_range = 1000 
+                            test_range = 10000 
                             
                             #this chunck sets the thresholds/indexes for the testing range   
                             ls.append(pw)
@@ -136,13 +144,15 @@ if __name__ == "__main__":
             df_settings = pd.DataFrame({'setting': ['seed', 'N passwords', 'min length', 'max length', "complexity uppercase", "complexity lowercase", "complexity numbers", "complexity special", "exclude Il1", "exclude O0", "editdistance", "time in seconds"],
                                         'value': [input_seed, input_num_pw, input_len_min, input_len_max, input_uppercase, input_lowercase, input_numbers, input_special, input_IL, input_O0, input_editdis, t]} 
                            )
+            
 
+            #download buttons
             st.sidebar.download_button(
                 label="Download data as CSV",
                 data=df.to_csv(index = False).encode('utf-8'),
                 file_name='passwords.csv',
                 mime='text/csv',)
-            
+                
             st.sidebar.download_button(
                 label="Download app settings",
                 data=df_settings.to_csv(index = False, sep=';').encode('utf-8'),
