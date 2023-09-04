@@ -8,26 +8,33 @@ import random
 #---------------------------
 #---------------------------
 
+
+#find consecutive chars, such as, "aaaa", "11111"
 def find_consecutive_chars(pw):
-    count = 0
-    prev_char = None
-    result = []
-
-    for char in pw:
-        if char == prev_char:
-            count += 1
-        else:
-            if count > 0:
-                result.append(count+1)
-            count = 0
-        prev_char = char
-
-    if count > 0:
-        result.append(count+1)
-
-    prop_consecutive = sum(result)/len(pw)
+    count = 1
     
-    return prop_consecutive
+    for i in range(1, len(pw)):
+        if ord(pw[i]) == ord(pw[i - 1]):
+            count += 1
+        
+    prop = count / len(pw)  
+    
+    return prop
+
+#find neighboring chars, such as, "ABC", "123"
+def neighbor_chars(pw):
+    count = 1
+
+    for i in range(1, len(pw)):
+        if ord(pw[i]) == ord(pw[i - 1]) + 1:
+            count += 1
+        
+        
+    prop = count / len(pw)
+
+    return prop
+
+
 
 #create a random password
 def random_pw(len_min = 4,
