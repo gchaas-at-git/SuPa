@@ -99,7 +99,7 @@ If you have questions or suggestions, feel free to reach out to mail@georg-haas.
 
 You use this app for your study, I would appreciate if you cite the app:
 
-Haas, G.-C. (2023). Survey Password Creator (SuPa) (Version 1.0.0). Retrieved from https://github.com/gchaas-at-git/supaa
+Haas, G.-C. (2023). Survey Password Creator (SuPa) (Version 1.0.0). Retrieved from https://github.com/gchaas-at-git/supa
 
 
 ## References
