@@ -46,12 +46,13 @@ The default settings for the advanced options adhere to [recommendations from th
 ## Recommended standards by scientific literature
 
 Currently, the literature recommends a few standards for survey passwords:
-1. It is advised to avoid using an increasing set of consecutive numbers and letters (e.g., 'ABCDEF', '12345'; see Callegaro et al., 2015, p.117). *Hence, the app considers passwords as valid only if less than 50% of the characters in the password are in consecutive order. For example, an eight-character password should not have more than three consecutive characters.*
+1. It is advised to avoid using an increasing set of neighboring numbers and letters (e.g., 'ABCDEF', '12345'; see Callegaro et al., 2015, p.117). *Hence, the app considers passwords as valid only if less than 50% of the characters in the password are in neighboring order. For example, an eight-character password should not have more than three neighboring characters.*
 
 2. To prevent typing errors or random guessing, pairs of passwords should differ in at least two characters (see Callegaro et al., 2015, p.117). *To ensure this, the app checks the similarity between passwords using the [editdistance package](https://pypi.org/project/editdistance/) (version 0.6.2), which utilizes the Levenshtein distance algorithm. The default threshold is set to 1, meaning that if changing a single character in a password would retrieve an existing password from the list, it is considered too similar and excluded. However, if two or more characters need to be changed to retrieve a password already in the list, it is considered valid (see [How is similarity tested](#how-does-the-app-test-similarity-between-passwords) for more information).*
 
 3. It is recommended to avoid including ambiguous characters, such as **I, 1, l**, or **O, 0** (Couper et al., 2001; Couper, 2008). For instance, Couper et al. (2001) found that passwords containing ambiguous characters had a significantly lower response rate compared to those without such characters (43.7% vs. 50.4%). *Therefore, ambiguous characters are excluded by default.*
 
+4. It is advised to avoid using an increasing set of the same number or letter (e.g., 'AAAACDEF', '111112345'). *Hence, the app considers passwords as valid only if less than 50% of the characters in the password are the same.*
 
 ## How does the app test similarity between passwords?
 The app generates random passwords, and each time a password is created, it is added to the list. However, in cases where the password list is long or consists mostly of short passwords, there is a higher likelihood of generating a password that is similar to an existing one. To address this issue, the app checks each newly created password for similarity against the passwords already in the list using the [editdistance](https://pypi.org/project/editdistance/) function.
